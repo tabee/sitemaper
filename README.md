@@ -1,10 +1,10 @@
-# Sitemaper
+# sitemaper
 
-Sitemaper is a Python tool for creating sitemaps by crawling a specified website. It generates a sitemap in XML format that includes the URLs and titles of all the pages within the site.
+sitemaper is a Python tool for creating sitemaps by crawling a specified website. It generates a sitemap in XML format that includes the URLs and titles of all the pages within the site.
 
 ## Installation
 
-To install Sitemaper, you need to clone the repository and install it using pip. Run the following commands:
+To install sitemaper, you need to clone the repository and install it using pip. Run the following commands:
 
 ```bash
 git clone https://github.com/tabee/sitemaper.git
@@ -14,7 +14,7 @@ pip install .
 
 ## Usage
 
-You can use Sitemaper in your Python scripts as follows:
+You can use sitemaper in your Python scripts as follows:
 
 ```python
 from sitemaper import make_sitemap
