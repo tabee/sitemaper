@@ -9,5 +9,5 @@ setup(
     author='Mario Bee',
     author_email='bee.mario@gmail.com',
     description='A small sitemap generator.',
-    install_requires=['etree', 'beautifulsoup4'],
+    install_requires=['bs4', 'lxml', 'requests'],
 )
