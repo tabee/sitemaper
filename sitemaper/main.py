@@ -1,12 +1,9 @@
 """some base module for sitemap-generator"""
-import os
 import datetime
 import requests
 from bs4 import BeautifulSoup
-from dotenv import load_dotenv
 from lxml import etree
 
-#PATH_TO_WORKSPACE = os.getenv(load_dotenv() and "PATH_TO_WORKSPACE")
 PATH_TO_WORKSPACE = '/workspaces/sitemaper/sitemaper'
 
 headers = {
@@ -76,7 +73,7 @@ def build_sitemap(url, sitemap, visited, base_url):
         build_sitemap(link, sitemap, visited, base_url)
 
 
-def make_sitemap(base_url='https://www.example.ch', filename='example_ch'):
+def make_sitemap(base_url='https://www.iana.org', filename='_iana_org'):
     """make sitemap need the base URL of the website you want to crawl and a name for the file."""
 
     print(f"make sitemap for {base_url}")
