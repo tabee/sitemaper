@@ -71,7 +71,7 @@ def build_sitemap(url, sitemap, visited, base_url):
         build_sitemap(link, sitemap, visited, base_url)
 
 
-def make_sitemap(base_url='https://www.iana.org', filename='_iana_org'):
+def make_sitemap(base_url='https://www.iana.org', filepath='sitemap__iana_org.xml'):
     """make sitemap need the base URL of the website you want to crawl and a name for the file."""
 
     print(f"make sitemap for {base_url}")
@@ -97,8 +97,6 @@ def make_sitemap(base_url='https://www.iana.org', filename='_iana_org'):
         etree.SubElement(url_element, 'loc').text = url
         etree.SubElement(url_element, 'lastmod').text = lastmod
 
-    filepath = f'sitemap_{filename}.xml'
-
     # Write the XML declaration to the beginning of the file
     with open(filepath, 'w', encoding="utf8") as file:
         file.write("<?xml version='1.0' encoding='UTF-8'?>\n")
@@ -109,6 +107,6 @@ def make_sitemap(base_url='https://www.iana.org', filename='_iana_org'):
 
 
 if __name__ == "__main__":
-    NAME = '_iana_org'
+    NAME = 'sitemap__iana_org.xml'
     URL = 'https://www.iana.org/help/example-domains'
     make_sitemap(URL, NAME)
