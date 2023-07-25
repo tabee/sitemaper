@@ -1,112 +1,92 @@
-"""some base module for sitemap-generator"""
+''' This script crawls a given website and builds a sitemap in XML format. '''
 import datetime
+import time
+from urllib.parse import urljoin
 import requests
 from bs4 import BeautifulSoup
 from lxml import etree
 
-headers = {
+# Dictionary representing the HTTP headers to send along with the request.
+HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
                   'AppleWebKit/537.36 (KHTML, like Gecko) '
                   'Chrome/58.0.3029.110 Safari/537.3'
 }
 
-
-def crawl(url, visited, base_url):
-    """crawl the url and extract the links"""
-    # Check if the URL has already been visited
-    if url in visited:
+# Internal function that attempts to connect to a given URL and extract all hyperlinks present on the page.
+def _crawl(session, url, base_url, retries=3, delay=5):
+    if not url.startswith(base_url):
         return []
 
-    # Send an HTTP request to the URL
-    response = requests.get(
-        url, headers=headers, timeout=5
-    )  # Zeile 13 aufgeteilt
+    for _ in range(retries):
+        try:
+            response = session.get(url, headers=HEADERS, timeout=15)
+            if response.status_code != 200:
+                return []
 
-    # Check if the response is successful
-    if response.status_code == 200:
-        # Parse the HTML content
-        soup = BeautifulSoup(response.content, 'html.parser')
+            soup = BeautifulSoup(response.content, 'html.parser')
+            title = soup.title.string if soup.title else "No Title" # extract page title
+            links = [(urljoin(base_url, link.get('href')), title) for link in soup.find_all('a') if link.get('href')]
+            return links
+        except requests.exceptions.ConnectionError as e:
+            print(f"Connection error: {e}. Retrying in {delay} seconds.")
+            time.sleep(delay)
+    return []
 
-        # Extract the links from the HTML page
-        links = []
-
-        # Find all the 'a' tags on the page
-        a_tags = soup.find_all('a')
-
-        # Check if any 'a' tags were found
-        if a_tags:
-            for link in a_tags:
-                href = link.get('href')
-                if href and href.startswith('/'):
-                    # Prefix the link with the base URL
-                    href = f"{base_url}{href}"
-                if href and href.startswith(base_url):
-                    links.append(href)
-        return links
-
-    return []  # Konsistente Rückgabewerte gewährleisten
-
-
-def build_sitemap(url, sitemap, visited, base_url):
-    """build sitemap"""
-    # Get the path of the URL
-    path = url.replace(base_url, '')
-
-    # Check if the path has already been visited
+# Internal function that takes a URL, crawls it to find all linked pages, and recursively builds a sitemap by visiting each linked page.
+def _build_sitemap(session, url, sitemap, visited, base_url):
+    path = url[0].replace(base_url, '')
     if path in visited:
         return
 
-    # Print the URL that is being crawled
-    print(url)
-
-    # Add the URL to the sitemap and mark the path as visited
-    sitemap.append(url)
+    print(url[0]) # print URL
+    sitemap.append(url) # append tuple (url, title)
     visited.add(path)
 
-    # Crawl the URL and extract the links
-    links = crawl(url, visited, base_url)
-
-    # Follow the links and add them to the sitemap
+    links = _crawl(session, url[0], base_url)
     for link in links:
-        build_sitemap(link, sitemap, visited, base_url)
+        _build_sitemap(session, link, sitemap, visited, base_url)
 
+# Main function to call to build a sitemap.
+def make_sitemap(base_url='https://www.iana.org', filepath='sitemap__iana_org.xml', exclude=None, must_include=None):
+    if exclude is None:
+        exclude = []
+    if must_include is None:
+        must_include = []
 
-def make_sitemap(base_url='https://www.iana.org', filepath='sitemap__iana_org.xml'):
-    """make sitemap need the base URL of the website you want to crawl and a name for the file."""
-
-    print(f"make sitemap for {base_url}")
+    print(f"make sitemap for {base_url}\n")
 
     now = datetime.datetime.now()
-
-    # Format the date and time as a string in the desired format
     lastmod = now.strftime("%Y-%m-%d")
 
     sitemap = []
     visited = set()
 
-    # Start building the sitemap from the base URL
-    build_sitemap(base_url, sitemap, visited, base_url)
+    # Starts a new HTTP session and initiates the sitemap build process.
+    with requests.Session() as session:
+        _build_sitemap(session, (base_url, 'Home'), sitemap, visited, base_url)
 
-    # Create the root element of the sitemap
-    root = etree.Element(
-        'urlset', xmlns="http://www.sitemaps.org/schemas/sitemap/0.9")
-
-    # Add the URLs to the sitemap as 'url' elements
-    for url in sitemap:
+    # Creates XML format of the sitemap and saves it to a file.
+    root = etree.Element('urlset', xmlns="http://www.sitemaps.org/schemas/sitemap/0.9")
+    for url, title in sitemap:
+        if any(ex in url for ex in exclude) or not all(inc in url for inc in must_include):
+            continue
         url_element = etree.SubElement(root, 'url')
         etree.SubElement(url_element, 'loc').text = url
         etree.SubElement(url_element, 'lastmod').text = lastmod
+        etree.SubElement(url_element, 'title').text = title
 
-    # Write the XML declaration to the beginning of the file
-    with open(filepath, 'w', encoding="utf8") as file:
-        file.write("<?xml version='1.0' encoding='UTF-8'?>\n")
-
-    # Write the sitemap to a file as XML
-    with open(filepath, 'ab') as file:
+    with open(filepath, 'wb') as file:
+        file.write("<?xml version='1.0' encoding='UTF-8'?>\n".encode())
         file.write(etree.tostring(root, pretty_print=True))
+    print(f"sitemap for {base_url} with {len(sitemap)} - some are excludet! \n")
 
-
+# The main part of the script where you specify the site to crawl and where to save the sitemap.
 if __name__ == "__main__":
-    NAME = 'sitemap__iana_org.xml'
-    URL = 'https://www.iana.org/help/example-domains'
-    make_sitemap(URL, NAME)
+    # filename = 'sitemap__iana_org.xml'
+    # base_url = 'https://www.iana.org/help/example-domains'
+    filename = 'sitemap__ch_ch.xml'
+    base_url = 'https://www.ch.ch'
+    exclude = ["@", "#"]
+    must_include = ["/", "https://www.ch.ch"]
+    make_sitemap(base_url, filename, exclude, must_include)
