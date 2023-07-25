@@ -4,8 +4,6 @@ import requests
 from bs4 import BeautifulSoup
 from lxml import etree
 
-PATH_TO_WORKSPACE = '/workspaces/sitemaper/sitemaper'
-
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
                   'AppleWebKit/537.36 (KHTML, like Gecko) '
@@ -99,7 +97,7 @@ def make_sitemap(base_url='https://www.iana.org', filename='_iana_org'):
         etree.SubElement(url_element, 'loc').text = url
         etree.SubElement(url_element, 'lastmod').text = lastmod
 
-    filepath = f'{PATH_TO_WORKSPACE}/sitemap_{filename}.xml'
+    filepath = f'sitemap_{filename}.xml'
 
     # Write the XML declaration to the beginning of the file
     with open(filepath, 'w', encoding="utf8") as file:
