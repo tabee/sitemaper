@@ -1,13 +1,13 @@
 """some base module for sitemap-generator"""
-import datetime
 import os
+import datetime
 import requests
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from lxml import etree
 
-PATH_TO_WORKSPACE = os.getenv(load_dotenv() and "PATH_TO_WORKSPACE")
-
+#PATH_TO_WORKSPACE = os.getenv(load_dotenv() and "PATH_TO_WORKSPACE")
+PATH_TO_WORKSPACE = '/workspaces/sitemaper/sitemaper'
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
@@ -102,7 +102,7 @@ def make_sitemap(base_url='https://www.example.ch', filename='example_ch'):
         etree.SubElement(url_element, 'loc').text = url
         etree.SubElement(url_element, 'lastmod').text = lastmod
 
-    filepath = f'{PATH_TO_WORKSPACE}/data/sitemaps/sitemap_{filename}.xml'
+    filepath = f'{PATH_TO_WORKSPACE}/sitemap_{filename}.xml'
 
     # Write the XML declaration to the beginning of the file
     with open(filepath, 'w', encoding="utf8") as file:
@@ -114,6 +114,6 @@ def make_sitemap(base_url='https://www.example.ch', filename='example_ch'):
 
 
 if __name__ == "__main__":
-    NAME = '_bee_gu_ch'
-    URL = 'https://www.bee-gu.ch'
+    NAME = '_iana_org'
+    URL = 'https://www.iana.org/help/example-domains'
     make_sitemap(URL, NAME)
