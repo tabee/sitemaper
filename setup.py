@@ -2,10 +2,10 @@ from setuptools import setup, find_packages
 
 setup(
     name='sitemaper',
-    version='0.1.4',
+    version='0.1.5',
     packages=find_packages(),
     url='https://github.com/tabee/sitemaper',
-    license='Apache License',
+    license='MIT License',
     author='Mario Bee',
     author_email='bee.mario@gmail.com',
     description='A small sitemap generator.',
