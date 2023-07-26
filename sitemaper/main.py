@@ -14,7 +14,7 @@ HEADERS = {
 }
 
 # Internal function that attempts to connect to a given URL and extract all hyperlinks present on the page.
-def _crawl(session, url, base_url, retries=3, delay=5):
+def _crawl(session, url, base_url, retries=5, delay=15):
     if not url.startswith(base_url):
         return []
 
@@ -83,10 +83,11 @@ def make_sitemap(base_url='https://www.iana.org', filepath='sitemap__iana_org.xm
 
 # The main part of the script where you specify the site to crawl and where to save the sitemap.
 if __name__ == "__main__":
-    # filename = 'sitemap__iana_org.xml'
-    # base_url = 'https://www.iana.org/help/example-domains'
-    filename = 'sitemap__ch_ch.xml'
-    base_url = 'https://www.ch.ch'
-    exclude = ["@", "#"]
-    must_include = ["/", "https://www.ch.ch"]
-    make_sitemap(base_url, filename, exclude, must_include)
+    try:
+        filename = 'sitemap__sozialversicherungen_admin_ch.xml'
+        base_url = 'https://sozialversicherungen.admin.ch/'
+        exclude = ["/fr/", "/it/"]
+        must_include = ["/de/", "/"]
+        make_sitemap(base_url, filename, exclude, must_include)
+    except Exception as e:
+        print("An error occurred:", e)
