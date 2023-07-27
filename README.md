@@ -15,14 +15,19 @@ pip install git+https://github.com/tabee/sitemaper.git
 You can use sitemaper in your Python scripts as follows:
 
 ```python
-from sitemaper import make_sitemap
+from sitemaper.main import Datasource, make_sitemap
 
-filename = 'sitemap__iana_org.xml'
-base_url = 'https://www.iana.org/help/example-domains'
-exclude = ["#", "@"]
-must_include = ["/", "https://www."]
+source_01 = Datasource(
+    'https://www.bee-gu.ch',
+    'sitemap__bee_gu_ch.xml',
+    ["#", "mailto:"],
+    [".html", "https://www.bee-gu.ch"])
 
-make_sitemap(base_url, filename, exclude, must_include)
+try:
+    make_sitemap(source_01.base_url, source_01.filename,
+                    source_01.exclude, source_01.must_include)
+except Exception as e:
+    print("An error occurred:", e)
 ```
 
 This script will crawl the website at the specified base URL and build a sitemap, which is saved to the specified file. The `exclude` and `must_include` parameters are lists of URL substrings to exclude from or require in the sitemap, respectively.
