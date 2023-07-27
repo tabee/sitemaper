@@ -1,4 +1,4 @@
-#🕸️🦾sitemaper
+# sitemaper 🕸️🦾
 
 sitemaper is a Python tool for creating sitemaps by crawling a specified website. It generates a sitemap in XML format that includes the URLs and titles of all the pages within the site.
 
