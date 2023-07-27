@@ -7,9 +7,7 @@ sitemaper is a Python tool for creating sitemaps by crawling a specified website
 To install sitemaper, you need to clone the repository and install it using pip. Run the following commands:
 
 ```bash
-git clone https://github.com/tabee/sitemaper.git
-cd sitemaper
-pip install .
+pip install git+https://github.com/tabee/sitemaper.git
 ```
 
 ## Usage
