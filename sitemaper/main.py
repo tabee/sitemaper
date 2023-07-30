@@ -112,9 +112,9 @@ def make_sitemap(base_url='https://www.iana.org', filepath='sitemap__iana_org.xm
         etree.SubElement(url_element, 'title').text = title
 
     with open(filepath, 'wb') as file:
-        file.write("<?xml version='1.0' encoding='UTF-8'?>\n".encode())
+        file.write("<?xml version='1.0' encoding='UTF-8'?>\n".encode('utf-8'))
         #file.write(etree.tostring(root, pretty_print=True))
-        file.write(etree.tostring(root, pretty_print=True, encoding='UTF-8'))
+        file.write(etree.tostring(root, pretty_print=True, encoding='UTF-8')).encode('utf-8')
     print(
         f"sitemap for {base_url} with {len(sitemap)} - some are excludet! \n")
 
@@ -124,20 +124,20 @@ if __name__ == "__main__":
 
     source_00_br = Datasource('https://admin.ch',
                               'sitemap__admin_ch.xml',
-                              ["/fr/", "/it/",  "/en/", "/rm/", "#", "mailto:", ".zip", "mp3", "mp4"],
-                              ["https://admin.ch", "/de/"])
+                              ['/fr/', '/it/',  '/en/', '/rm/', '#', 'mailto:', '.zip', 'mp3', 'mp4'],
+                              ['https://admin.ch', '/de/'])
     source_01_eak = Datasource('https://www.eak.admin.ch',
                                'sitemap__eak_admin_ch.xml',
-                               ["/fr/", "/it/", "/en/"],
-                               ["/de/", "/"])
+                               ['/fr/', '/it/', '/en/'],
+                               ['https://www.eak.admin.ch', '/de/', '/'])
     source_02_zas = Datasource('https://www.zas.admin.ch',
                                'sitemap__zas_admin_ch.xml',
-                               ["/fr/", "/it/",  "/en/", "es/", "#", "mailto:"],
-                               ["/de/", "https://www.zas.admin.ch"])
+                               ['/fr/', '/it/',  '/en/', 'es/', '#', 'mailto:'],
+                               ['/de/', 'https://www.zas.admin.ch'])
     source_03_bee = Datasource('https://www.bee-gu.ch',
                                'sitemap__bee_gu_ch.xml',
-                               ["/fr/", "/it/",  "/en/", "es/", "#", "mailto:"],
-                               ["/", "https://www.bee-gu.ch"])
+                               ['/fr/', '/it/',  '/en/', 'es/', '#', 'mailto:'],
+                               ['https://www.bee-gu.ch', '/', '.html'])
 
     source = source_03_bee
 
