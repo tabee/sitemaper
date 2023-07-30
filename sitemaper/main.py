@@ -113,7 +113,8 @@ def make_sitemap(base_url='https://www.iana.org', filepath='sitemap__iana_org.xm
 
     with open(filepath, 'wb') as file:
         file.write("<?xml version='1.0' encoding='UTF-8'?>\n".encode())
-        file.write(etree.tostring(root, pretty_print=True))
+        #file.write(etree.tostring(root, pretty_print=True))
+        file.write(etree.tostring(root, pretty_print=True, encoding='UTF-8'))
     print(
         f"sitemap for {base_url} with {len(sitemap)} - some are excludet! \n")
 
@@ -133,8 +134,12 @@ if __name__ == "__main__":
                                'sitemap__zas_admin_ch.xml',
                                ["/fr/", "/it/",  "/en/", "es/", "#", "mailto:"],
                                ["/de/", "https://www.zas.admin.ch"])
+    source_03_bee = Datasource('https://www.bee-gu.ch',
+                               'sitemap__bee_gu_ch.xml',
+                               ["/fr/", "/it/",  "/en/", "es/", "#", "mailto:"],
+                               ["/", "https://www.bee-gu.ch"])
 
-    source = source_00_br
+    source = source_03_bee
 
     try:
         make_sitemap(source.base_url, source.filename,
