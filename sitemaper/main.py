@@ -111,12 +111,11 @@ def make_sitemap(base_url='https://www.iana.org', filepath='sitemap__iana_org.xm
         etree.SubElement(url_element, 'lastmod').text = lastmod
         etree.SubElement(url_element, 'title').text = title
 
-    with open(filepath, 'wb') as file:
-        file.write("<?xml version='1.0' encoding='UTF-8'?>\n".encode('utf-8'))
-        #file.write(etree.tostring(root, pretty_print=True))
-        file.write(etree.tostring(root, pretty_print=True, encoding='UTF-8')).encode('utf-8')
-    print(
-        f"sitemap for {base_url} with {len(sitemap)} - some are excludet! \n")
+        with open(filepath, 'wb') as file:
+            file.write("<?xml version='1.0' encoding='UTF-8'?>\n".encode('UTF-8'))
+            file.write(etree.tostring(root, pretty_print=True, encoding='UTF-8'))
+    print(f"sitemap for {base_url} with {len(sitemap)} - some are excludet! \n")
+
 
 
 # The main part of the script where you specify the site to crawl and where to save the sitemap.
@@ -128,8 +127,8 @@ if __name__ == "__main__":
                               ['https://admin.ch', '/de/'])
     source_01_eak = Datasource('https://www.eak.admin.ch',
                                'sitemap__eak_admin_ch.xml',
-                               ['/fr/', '/it/', '/en/'],
-                               ['https://www.eak.admin.ch', '/de/', '/'])
+                               ['/fr/', '/it/', '/en/', "#", "mailto:", "tel:"],
+                               ['https://www.eak.admin.ch', '/de/', '/', '.html'])
     source_02_zas = Datasource('https://www.zas.admin.ch',
                                'sitemap__zas_admin_ch.xml',
                                ['/fr/', '/it/',  '/en/', 'es/', '#', 'mailto:'],
@@ -139,7 +138,7 @@ if __name__ == "__main__":
                                ['/fr/', '/it/',  '/en/', 'es/', '#', 'mailto:'],
                                ['https://www.bee-gu.ch', '/', '.html'])
 
-    source = source_03_bee
+    source = source_01_eak
 
     try:
         make_sitemap(source.base_url, source.filename,
