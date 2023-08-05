@@ -2,13 +2,19 @@
 
 sitemaper is a Python tool for creating sitemaps by crawling a specified website. It generates a sitemap in XML format that includes the URLs and titles of all the pages within the site.
 
+[![Open Issues](https://img.shields.io/github/issues-raw/tabee/sitemaper)](https://github.com/tabee/sitemaper/issues)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 ## Installation
 
-To install sitemaper, you need to clone the repository and install it using pip. Run the following commands:
+To install sitemaper, you clone the repository and install it using pip. Run the following commands:
 
 ```bash
 pip install git+https://github.com/tabee/sitemaper.git
 ```
+Or you start with  GitHub Codespaces:
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/tabee/sitemaper)
 
 ## Usage
 
